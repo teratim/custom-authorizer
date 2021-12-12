@@ -1,0 +1,42 @@
+AssumeRolePolicyDocument:
+  Version: '2012-10-17'
+  Statement:
+    - Effect: Allow
+      Principal:
+        Service:
+          - lambda.amazonaws.com
+      Action: sts:AssumeRole
+
+apiKeyPolicy:
+  - PolicyName: apiKeyPolicy
+    PolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+        - Effect: Allow
+          Action:
+            - logs:*
+          Resource:
+            - arn:aws:logs:*:*:*
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:DeleteItem
+            - dynamodb:UpdateItem
+            - dynamodb:Query
+          Resource:
+            - ${self:custom.ServiceApiKeyDataTable.arn}
+            - !Join ['/',['${self:custom.ServiceApiKeyDataTable.arn}', 'index','accessKeyIndex' ]]
+        - Effect: Allow
+          Action:
+            - kms:Encrypt
+            - kms:Decrypt
+            - kms:ReEncrypt
+            - kms:GenerateDataKey
+            - kms:DescribeKey
+          Resource:
+            - ${self:custom.KMSApiKey.arn}
+
+    
+  

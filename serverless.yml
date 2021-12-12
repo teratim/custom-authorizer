@@ -1,0 +1,68 @@
+service: service-api-key
+
+plugins:
+  - serverless-pseudo-parameters
+  - serverless-iam-roles-per-function
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  profile: demo
+  stage: dev
+  region: us-east-1
+  
+  environment:
+    APIKEY_TABLE_NAME: ${self:custom.ServiceApiKeyDataTable.name}
+    APIKEY_KMS_KEY: ${self:custom.KMSApiKey.arn}
+
+functions:
+  createKey:
+    handler: src/handlers/createKey.handler
+    role: apiKeyRole
+    events:
+      - http:
+          integration: lambda
+          path: createKey
+          method: post
+          cors: true
+
+  getKeyDetails:
+    handler: src/handlers/getKeyDetails.handler
+    role: apiKeyRole
+    events:
+      - http:
+          integration: lambda
+          path: getKeyDetails
+          method: post
+          cors: true
+
+  updateKeyState:
+    handler: src/handlers/updateKeyState.handler
+    role: apiKeyRole
+    events:
+      - http:
+          integration: lambda
+          path: updateKeyState
+          method: post
+          cors: true
+
+resources:
+  Resources:
+    ServiceApiKeyDataTable: ${file(resources/ServiceApiKeyDataTable.yml):ServiceApiKeyDataTable}
+    apiKeyRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Path: /
+        RoleName: apiKeyRole
+        AssumeRolePolicyDocument: ${file(IAM/roles.yml):AssumeRolePolicyDocument}
+        Policies: ${file(IAM/roles.yml):apiKeyPolicy}
+
+custom:
+  ServiceApiKeyDataTable:
+    name: !Ref ServiceApiKeyDataTable
+    arn: !GetAtt ServiceApiKeyDataTable.Arn
+  KMSApiKey:
+    name: ${file(KMS/keydata.yml):name}
+    arn: ${file(KMS/keydata.yml):arn}
+  bundle:
+    linting: false

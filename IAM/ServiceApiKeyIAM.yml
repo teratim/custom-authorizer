@@ -1,0 +1,28 @@
+ServiceApiKeyIAM:
+  - Effect: Allow
+    Action: 
+      - dynamodb:PutItem
+      - dynamodb:Scan
+      - dynamodb:GetItem
+      - dynamodb:DeleteItem
+      - dynamodb:UpdateItem
+      - dynamodb:Query
+    Resource:
+      - ${self:custom.ServiceApiKeyDataTable.arn}
+  - Effect: Allow
+    Action: 
+      - lambda:*
+      - logs:*
+    Resource:
+      - "*"
+  - Effect: Allow
+    Action:
+      - kms:Encrypt
+      - kms:Decrypt
+      - kms:ReEncrypt
+      - kms:GenerateDataKey
+      - kms:DescribeKey
+    Resource:
+      - ${self:custom.lambdakey.arn}
+    
+  

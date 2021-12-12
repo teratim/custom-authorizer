@@ -1,0 +1,17 @@
+{
+  "name": "service-key-api",
+  "version": "1.0.0",
+  "description": "Client Side Key Generation",
+  "author": "DatsbyHQ",
+  "license": "SEE LICENSE IN LICENSE",
+  "devDependencies": {
+    "aws-sdk": "^2.597.0",
+    "serverless-iam-roles-per-function": "^3.1.0",
+    "serverless-pseudo-parameters": "^2.5.0"
+  },
+  "dependencies": {
+    "@middy/core": "^2.2.0",
+    "@middy/http-error-handler": "^2.2.0",
+    "@middy/http-json-body-parser": "^2.2.0"
+  }
+}
