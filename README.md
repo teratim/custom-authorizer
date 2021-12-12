@@ -1,4 +1,4 @@
-# Service-api-key
+# Custom Authorizer Serverless Example.
 
 These are some really brief instructions for you to try and get a simple serverless framework demo working.
 
